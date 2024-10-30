@@ -1,22 +1,22 @@
-# Steps to run 
-## install Python, Java, FastApi
+# Steps to Run the Question Generation System
 
-## Step - 1 download Standford Core NLP 
-Link : https://stanfordnlp.github.io/CoreNLP/
+## Prerequisites
+1. Install **Python**.
+2. Install **Java**.
+3. Install **FastAPI**.
 
-## Step - 2 Run Standford Core NLP 
+## Step 1: Download Stanford CoreNLP
+- Download Stanford CoreNLP from the following link: [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/).
+- Extract the downloaded file into a folder named **Question-Generation**.
 
-Open Terminal to / at path PARA_QG\stanford-corenlp-4.5.7
-
-Paste this bash Command :
+## Step 2: Run Stanford CoreNLP
+1. Open a terminal and navigate to the **Question-Generation/stanford-corenlp-4.5.7** directory.
+2. Paste the following command to start the Stanford CoreNLP server:
 java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer \
   -port 9000 -timeout 15000
 
-## step-3 start FastAPI Server 
-
-open terminal to / at path Question-Generation\paraqg_system
-
-Paste this bash Command : uvicorn main:app --reload
-
-open this link in browser :  http://127.0.0.1:8000/
-
+## step-3 Start the FastAPI Server 
+1. Open another terminal and navigate to the Question-Generation/paraqg_system directory.
+2. Paste the following command to start the FastAPI server:
+uvicorn main:app --reload
+3. Open your web browser and visit the following link: http://127.0.0.1:8000/.
