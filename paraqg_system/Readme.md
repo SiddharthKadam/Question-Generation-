@@ -3,12 +3,14 @@
 ## Prerequisites
 1. Install **Python**.
 2. Install **Java**.
-3. Install **fastapi**.
-4. Install **uvicorn**.
-5. Install **pydantic**.
-6. Install **jinja2**.
-7. Install **python-multipart**.
-8. Install **nltk**
+
+## python Packages to Install
+1. Install **fastapi**.
+2. Install **uvicorn**.
+3. Install **pydantic**.
+4. Install **jinja2**.
+5. Install **python-multipart**.
+6. Install **nltk**
 
 ## Step 1: Download Stanford CoreNLP
 - Download Stanford CoreNLP from the following link: [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/).
