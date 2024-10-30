@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <form action="/set_button" method="post">
+        <div class="container_main">
+
+            <div class="container_left_child">
+
+
+                <div class="{{ 'container_button' if select_answers==True else 'notVisible'}}">
+                    <button name="button_name" class="{{'active' if noun_phrase else ''}}" value="Noun_Phrase">Noun
+                        Phrase</button>
+                    <button name="button_name" class="{{'active' if named_entity else ''}}" value="Named_Entity">Named
+                        Entity</button>
+                    <button name="button_name" class="{{'active' if custom_answers else ''}}"
+                        value="Custom_Answers">Custom Answers</button>
+
+                    <button name="button_name" style="color: white;background-color: blue;"
+                    value="update">update</button>
+                
+                </div>
+
+                <div style="flex-direction: column;justify-content: space-between;">
+                    <textarea name="original_text" class="{{'text-container' if new_content else 'notVisible'}}"
+                        style="font-size: large; text-align:start;" title="Enter your content" placeholder="Enter your content">{{original_text}}</textarea>
+                    <div class="{{ 'text-container' if select_answers==True or review_content==True else 'notVisible'}}"
+                        id="text-container" style="font-size: large;">
+
+                        {% if select_answers %}
+                            {% if noun_phrase%}
+
+                                {%for strr in modified_text.split()%}
+
+                                    {% if strr in selected_texts %}
+                                        <span class="selected">{{strr}}</span>
+                                    {%else%}
+                                        {% if strr not in pos_pivotal_ans%}
+                                            {{strr}}
+                                        {%else%}
+                                            <span>{{strr}}</span>
+                                        {%endif%}
+                                    {%endif%}
+                                {%endfor%}
+                            {%endif%}
+
+                        {% if named_entity %}
+                        {%for strr in modified_text.split()%}
+                        {% if strr in selected_texts %}
+                                        <span style="background-color: green;"  class="selected">{{strr}}</span>
+                                    {%else%}
+                        {% if strr not in ner_pivotal_ans %}
+                        {{strr}}
+                        {%else%}
+                        <span>{{strr}}</span>
+                        {%endif%}
+                        {%endif%}
+                        {%endfor%}
+                        {%endif%}
+
+                        {% if custom_answers %}
+                        {%for strr in modified_text.split()%}
+                        {% if strr in selected_texts %}
+                                        <span style="background-color: green;"  class="selected">{{strr}}</span>
+                                    {%else%}
+                        <span>{{strr}}</span>
+                        {%endif%}
+                        {%endfor%}
+                        {%endif%}
+
+                        {%else%}
+                        <h2><b>Highlighted text will be removed</b></h2>
+                        {% for strr in original_text.split() %}
+                        {% if strr not in urls and strr not in non_ascii %}
+                        {{strr}}
+                        {% else %}
+                        <span style="color: red;background-color: black; padding: 2px;">{{ strr }}</span>
+                        {% endif %}
+                        {% endfor %}
+                        {%endif%}
+
+                    </div>
+
+
+                    </type>
+                </div>
+
+
+
+            </div>
+
+            <div class="container_right_child">
+
+                <button type="submit" name="button_name" class="right_child_button"
+                    style="color: {{ 'yellow' if new_content else 'gray' }};" value="new_Content">New
+                    Content</button><br>
+                <button type="submit" name="button_name" class="right_child_button"
+                    style="color: {{ 'yellow' if review_content else 'gray' }};" value="Review_Content">Review
+                    Content</button><br>
+                <button type="submit" name="button_name" class="right_child_button"
+                    style="color: {{ 'yellow' if select_answers else 'gray' }};" value="Select_Answers">Select
+                    Answers</button><br>
+                <button type="submit" name="button_name" class="right_child_button" disabled="True"
+                    style="color: {{ 'yellow' if question_answers else 'gray' }};" value="Question_Answers">Question
+                    Answers</button>
+
+
+            </div>
+        </div>
+    </form>
+
+    <script>
+        document.querySelectorAll("#text-container span").forEach(span => {
+            span.addEventListener("click", function () {
+                const selectedText = this.textContent;
+                fetch("/selected_text", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({ selected: selectedText })
+                }).then(response => response.json()).then(data => {
+                    console.log(data.message);
+                    this.classList.toggle("selected");
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
