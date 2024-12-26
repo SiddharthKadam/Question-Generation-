@@ -5,14 +5,18 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 from classes.part_of_speech import POS
 from classes.named_entity_recognition import NER
-
+from classes.bio_notation import BIO
+# from classes.QuestionGenrationModel import GenerateQuestion
+from classes.QuestionGenerator import QuestionGenerator
 import re
 import string 
 
 app = FastAPI()
 ner = NER()
 pos = POS()
-
+bio = BIO()
+# QG = GenerateQuestion()
+QG = QuestionGenerator()
 def default_variable():
     return  {
         # Buttons
@@ -62,6 +66,7 @@ async def update_pivot_ans(request: Request, button_name: str = Form(...)):
 @app.post("/set_button")
 async def set_button(request: Request, button_name: str = Form(...),original_text: str = Form(...)):
     print(button_name)
+    print(variables["selected_texts"])
     if button_name != "update":
         variables["original_text"]=original_text
     if button_name == "new_Content":
@@ -71,7 +76,8 @@ async def set_button(request: Request, button_name: str = Form(...),original_tex
     elif button_name == "Select_Answers":
         on_select_answers()
     elif button_name == "Question_Answers":
-        on_question_answers()
+        if len(variables["selected_texts"]) > 0:
+            on_question_answers()
 
     elif button_name == "Noun_Phrase":
         on_noun_pharse()
@@ -104,6 +110,7 @@ def on_review_content():
         variables["custom_answers"] = False
 
 def on_select_answers():
+    print(variables["original_text"])
     if len(variables["original_text"]) != 0:
 
         variables["new_content"] = False  
@@ -151,6 +158,35 @@ def on_question_answers():
         variables["noun_phrase"] = False
         variables["named_entity"] = False
         variables["custom_answers"] = False
+
+    print("orignal_text:",variables["original_text"])
+
+    if variables["original_text"] in "The First epoch is Always Hard , We are the Chaotic Noob , project Git Link : https://github.com/SiddharthKadam/Question-Generation-":
+        variables   ["original_text"]= "who are you?"
+    else:
+
+        print("Ans_List:",variables["selected_texts"])
+        text = ""
+        genrated_questions = []
+        for answer in variables["selected_texts"]:
+            bio_sentence = bio.convert_BIO(context=variables["original_text"].lower(),answers=answer.lower())
+            # context_seq_test = QG.tokenizer_text.texts_to_sequences([bio_sentence])
+            # from tensorflow.keras.preprocessing.sequence import pad_sequences
+            # context_seq_test = pad_sequences(context_seq_test, maxlen=QG.max_len_context, padding='post')
+            print(answer)
+            gen_que = QG.generate_question(context=bio_sentence)
+            print(gen_que)
+            genrated_questions.append(gen_que)
+
+        
+        for question in genrated_questions:
+            text += " " + question +"\n"
+            print(len(question.split()))
+        variables["original_text"]= text
+        # text = ""
+        # for answer in variables["selected_texts"]:
+        #     text+= " "+ bio.convert_BIO(context=variables["original_text"].lower(),answers=answer) +"\n"
+        # variables["original_text"]= text
 
 
 def on_noun_pharse():
