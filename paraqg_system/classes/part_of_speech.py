@@ -37,13 +37,12 @@ class POS:
         res_sentence_disp = ''
         while (i<len(input)):
             input[i] = input[i].lower()
-            res = json.loads(self.nlp.annotate(input[i],
+            res = self.nlp.annotate(input[i],
                         properties={
                             'annotators': 'pos',
                             'outputFormat': 'json',
                             'timeout': 1000000,
-                        }))
-
+                        })
 
             for k in range(0,len(res["sentences"])):
                 tokens = res["sentences"][k]['tokens']
@@ -82,12 +81,18 @@ class POS:
         
         while (i<len(input)):
             input[i] = input[i].lower()
-            res = json.loads(self.nlp.annotate(input[i],
+            # res = json.loads(self.nlp.annotate(input[i],
+            #             properties={
+            #                 'annotators': 'pos',
+            #                 'outputFormat': 'json',
+            #                 'timeout': 1000000,
+            #             }))
+            res = self.nlp.annotate(input[i],
                         properties={
                             'annotators': 'pos',
                             'outputFormat': 'json',
                             'timeout': 1000000,
-                        }))
+                        })
             flag = 0
             t_flag = 0
             words_pos = []

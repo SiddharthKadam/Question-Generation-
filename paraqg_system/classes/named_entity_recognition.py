@@ -15,12 +15,18 @@ class NER:
 
         while (i<len(input)):
             input[i] = input[i]
-            res = json.loads(self.nlp.annotate(input[i],
+            # res = json.loads(self.nlp.annotate(input[i],
+            #             properties={
+            #                 'annotators': 'ner',
+            #                 'outputFormat': 'json',
+            #                 'timeout': 1000000,
+            #             }))
+            res = self.nlp.annotate(input[i],
                         properties={
                             'annotators': 'ner',
                             'outputFormat': 'json',
                             'timeout': 1000000,
-                        }))
+                        })
 
             # BIO Notation 
             for k in range(0,len(res["sentences"])):
@@ -55,13 +61,20 @@ class NER:
         res_sentence_arr = []
         res_sentence_arr_disp = []
         while (i<len(input)):
-            res = json.loads(self.nlp.annotate(input[i],
+            # res = json.loads(self.nlp.annotate(input[i],
+            #             properties={
+            #                 'annotators': 'ner',
+            #                 'outputFormat': 'json',
+            #                 'timeout': 1000000,
+            #             }))
+
+            res = self.nlp.annotate(input[i],
                         properties={
                             'annotators': 'ner',
                             'outputFormat': 'json',
                             'timeout': 1000000,
-                        }))
-            
+                        })
+  
             flag = 0
             t_flag = 0
             words_ner = []
